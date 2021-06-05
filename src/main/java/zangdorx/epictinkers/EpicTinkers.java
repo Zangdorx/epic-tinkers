@@ -1,7 +1,9 @@
 package zangdorx.epictinkers;
 
+import maninhouse.epicfight.capabilities.item.PickaxeCapability;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,8 +17,13 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import net.minecraft.entity.
 
 import java.util.stream.Collectors;
+
+import slimeknights.tconstruct.tools.TinkerTools;
+import maninhouse.epicfight.capabilities.ProviderItem;
+import slimeknights.tconstruct.tools.item.small.HandAxeTool;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("epictinkers")
@@ -25,7 +32,8 @@ public class EpicTinkers
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public EpicTinkers() {
+    public EpicTinkers()
+    {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -34,6 +42,8 @@ public class EpicTinkers
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doCommonStuff);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -49,6 +59,10 @@ public class EpicTinkers
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+    }
+
+    private void doCommonStuff(final FMLCommonSetupEvent event) {
+        ProviderItem.addInstance(TinkerTools.pickaxe.asItem(), new PickaxeCapability(Items.DIAMOND_PICKAXE));
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
